@@ -1,0 +1,30 @@
+﻿{
+  "projectTitle": {
+    "zh": "鏅鸿兘鎶曡祫AI",
+    "en": "AI Investment Platform"
+  },
+  "problem": {
+    "zh": "浼犵粺鎶曢【鏈嶅姟鎴愭湰楂橈紝瑕嗙洊闈㈡湁闄?,
+    "en": "High cost and limited coverage"
+  },
+  "solution": {
+    "zh": "鏋勫缓AI鏅鸿兘浣?,
+    "en": "Build AI agent"
+  },
+  "modules": {
+    "zh": [{"title": "鐢ㄦ埛鐢诲儚", "description": "AI鍒嗘瀽"}],
+    "en": [{"title": "User Profile", "description": "AI Analysis"}]
+  },
+  "useCases": {
+    "zh": [{"title": "鍒稿晢", "description": "璇佸埜鍏徃", "icon": "a"}],
+    "en": [{"title": "Securities", "description": "Companies", "icon": "a"}]
+  },
+  "roadmap": {
+    "zh": [{"phase": "MVP", "date": "2024", "milestones": ["娴嬭瘯"]}],
+    "en": [{"phase": "MVP", "date": "2024", "milestones": ["Test"]}]
+  },
+  "faq": {
+    "zh": [{"question": "闂", "answer": "鍥炵瓟"}],
+    "en": [{"question": "Q", "answer": "A"}]
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "metrics": {
+    "VaR": {
+      "value": 2.3,
+      "unit": "%",
+      "label": {
+        "zh": "风险价值",
+        "en": "Value at Risk"
+      },
+      "trend": "+0.2",
+      "color": "cyan"
+    },
+    "Sharpe": {
+      "value": 1.87,
+      "unit": "",
+      "label": {
+        "zh": "夏普比率",
+        "en": "Sharpe Ratio"
+      },
+      "trend": "+0.15",
+      "color": "magenta"
+    },
+    "MaxDrawdown": {
+      "value": 8.5,
+      "unit": "%",
+      "label": {
+        "zh": "最大回撤",
+        "en": "Max Drawdown"
+      },
+      "trend": "-1.2",
+      "color": "purple"
+    },
+    "AlertHit": {
+      "value": 92.5,
+      "unit": "%",
+      "label": {
+        "zh": "预警命中率",
+        "en": "Alert Accuracy"
+      },
+      "trend": "+3.5",
+      "color": "cyan"
+    },
+    "StrategyCoverage": {
+      "value": 87.3,
+      "unit": "%",
+      "label": {
+        "zh": "策略覆盖度",
+        "en": "Strategy Coverage"
+      },
+      "trend": "+5.1",
+      "color": "magenta"
+    },
+    "RiskScore": {
+      "value": 7.2,
+      "unit": "/10",
+      "label": {
+        "zh": "综合风险评分",
+        "en": "Overall Risk Score"
+      },
+      "trend": "-0.3",
+      "color": "purple"
+    }
+  },
+  "chartData": {
+    "returns": [
+      { "date": "2024-01", "value": 2.1 },
+      { "date": "2024-02", "value": 3.8 },
+      { "date": "2024-03", "value": 2.5 },
+      { "date": "2024-04", "value": 4.2 },
+      { "date": "2024-05", "value": 3.6 },
+      { "date": "2024-06", "value": 5.1 }
+    ],
+    "drawdown": [
+      { "date": "2024-01", "value": -1.2 },
+      { "date": "2024-02", "value": -0.8 },
+      { "date": "2024-03", "value": -2.1 },
+      { "date": "2024-04", "value": -1.5 },
+      { "date": "2024-05", "value": -0.9 },
+      { "date": "2024-06", "value": -0.6 }
+    ],
+    "riskRadar": {
+      "credit": 3.2,
+      "market": 4.1,
+      "liquidity": 2.8,
+      "fraud": 1.9,
+      "operational": 3.5
+    }
+  }
+}

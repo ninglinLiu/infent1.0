@@ -1,0 +1,198 @@
+{
+  "projectTitle": {
+    "zh": "全栈式智能投资顾问与风险管理 AI",
+    "en": "Omni-Intelligent Investment Advisor & Risk Management AI"
+  },
+  "problem": {
+    "zh": "传统投顾服务成本高，覆盖面有限；风险管理滞后，市场风险识别不全面；客户面临信息过载，投资决策效率低且易出错。",
+    "en": "High cost and limited coverage of traditional advisory services; lagging risk management and incomplete market risk identification; clients face information overload, leading to low efficiency and error-prone investment decisions."
+  },
+  "solution": {
+    "zh": "构建集个性化智能投顾、实时智能风险预警和自动化风险管理于一体的 AI 智能体。利用机器学习分析用户画像和市场数据，提供个性化投资策略和调仓建议，并运用图神经网络等技术实时监测和识别信用、市场、欺诈等各类风险，优化内部运营流程。",
+    "en": "Develop an AI agent integrating 'Personalized Smart Advisory,' 'Real-time Intelligent Risk Warning,' and 'Automated Risk Management.' It uses machine learning to analyze user profiles and market data, offers customized investment strategies and portfolio adjustments, and employs GNNs to monitor and identify credit, market, and fraud risks in real time, optimizing internal operations."
+  },
+  "modules": {
+    "zh": [
+      {
+        "title": "用户画像",
+        "description": "AI驱动的多维度用户画像分析，精准洞察投资偏好和风险承受能力"
+      },
+      {
+        "title": "策略引擎",
+        "description": "基于机器学习的智能投资策略生成与动态优化"
+      },
+      {
+        "title": "GNN 风险雷达",
+        "description": "图神经网络实时监测和预警各类金融风险"
+      },
+      {
+        "title": "组合再平衡",
+        "description": "自动化的投资组合优化与动态调仓建议"
+      },
+      {
+        "title": "预警中心",
+        "description": "多维度实时风险预警与处置流程管理"
+      },
+      {
+        "title": "合规与审计",
+        "description": "自动合规检查与审计追踪，确保监管合规"
+      }
+    ],
+    "en": [
+      {
+        "title": "User Profiling",
+        "description": "AI-driven multi-dimensional user analysis, precise insights into investment preferences and risk tolerance"
+      },
+      {
+        "title": "Strategy Engine",
+        "description": "Machine learning-powered investment strategy generation and dynamic optimization"
+      },
+      {
+        "title": "GNN Risk Radar",
+        "description": "Graph neural networks for real-time financial risk monitoring and warning"
+      },
+      {
+        "title": "Portfolio Rebalancing",
+        "description": "Automated portfolio optimization and dynamic rebalancing recommendations"
+      },
+      {
+        "title": "Alert Center",
+        "description": "Multi-dimensional real-time risk alerts and handling workflow management"
+      },
+      {
+        "title": "Compliance & Audit",
+        "description": "Automated compliance checks and audit trails for regulatory compliance"
+      }
+    ]
+  },
+  "useCases": {
+    "zh": [
+      {
+        "title": "券商",
+        "description": "为证券公司提供智能化客户服务和风险管理",
+        "icon": "🏦"
+      },
+      {
+        "title": "资管机构",
+        "description": "资产管理公司的投资决策与合规支持系统",
+        "icon": "📊"
+      },
+      {
+        "title": "家族办公室",
+        "description": "为高净值家族提供定制化财富管理方案",
+        "icon": "🏛️"
+      },
+      {
+        "title": "散户App",
+        "description": "面向个人投资者的智能投顾移动应用",
+        "icon": "📱"
+      }
+    ],
+    "en": [
+      {
+        "title": "Securities Firms",
+        "description": "Intelligent customer service and risk management for securities companies",
+        "icon": "🏦"
+      },
+      {
+        "title": "Asset Management",
+        "description": "Investment decision-making and compliance support for asset managers",
+        "icon": "📊"
+      },
+      {
+        "title": "Family Offices",
+        "description": "Customized wealth management solutions for HNW families",
+        "icon": "🏛️"
+      },
+      {
+        "title": "Retail App",
+        "description": "Smart advisor mobile app for individual investors",
+        "icon": "📱"
+      }
+    ]
+  },
+  "roadmap": {
+    "zh": [
+      {
+        "phase": "MVP",
+        "date": "2024 Q1",
+        "milestones": ["核心策略引擎", "基础风险雷达", "MVP版本发布"]
+      },
+      {
+        "phase": "Beta",
+        "date": "2024 Q2",
+        "milestones": ["GNN风险模块", "移动端适配", "Beta测试"]
+      },
+      {
+        "phase": "GA",
+        "date": "2024 Q3",
+        "milestones": ["企业级集成", "合规审计系统", "正式发布"]
+      },
+      {
+        "phase": "企业集成",
+        "date": "2024 Q4",
+        "milestones": ["SaaS化", "OpenAPI生态", "国际化"]
+      }
+    ],
+    "en": [
+      {
+        "phase": "MVP",
+        "date": "2024 Q1",
+        "milestones": ["Core strategy engine", "Basic risk radar", "MVP release"]
+      },
+      {
+        "phase": "Beta",
+        "date": "2024 Q2",
+        "milestones": ["GNN risk module", "Mobile adaptation", "Beta testing"]
+      },
+      {
+        "phase": "GA",
+        "date": "2024 Q3",
+        "milestones": ["Enterprise integration", "Compliance & audit", "GA release"]
+      },
+      {
+        "phase": "Enterprise Integration",
+        "date": "2024 Q4",
+        "milestones": ["SaaS platform", "OpenAPI ecosystem", "Internationalization"]
+      }
+    ]
+  },
+  "faq": {
+    "zh": [
+      {
+        "question": "AI 策略的准确性如何？",
+        "answer": "我们的策略引擎基于深度学习模型，在历史回测中准确率达到85%以上，同时结合实时市场数据和风险因子持续优化。"
+      },
+      {
+        "question": "支持哪些投资标的？",
+        "answer": "目前支持股票、债券、期货、期权等多种金融衍生品，并正在扩展加密货币和另类投资标的。"
+      },
+      {
+        "question": "风险管理如何保障？",
+        "answer": "采用多维度风险模型，包括VaR计算、压力测试、实时监控和自动止损机制，确保投资组合风险可控。"
+      },
+      {
+        "question": "能否私有化部署？",
+        "answer": "支持SaaS云服务和私有化部署两种模式，可根据客户需求提供定制化解决方案。"
+      }
+    ],
+    "en": [
+      {
+        "question": "How accurate are AI strategies?",
+        "answer": "Our strategy engine based on deep learning models achieves over 85% accuracy in historical backtesting, with continuous optimization using real-time market data and risk factors."
+      },
+      {
+        "question": "What investment instruments are supported?",
+        "answer": "Currently support stocks, bonds, futures, options and various derivatives, with ongoing expansion to crypto and alternative investments."
+      },
+      {
+        "question": "How is risk management ensured?",
+        "answer": "Multi-dimensional risk models including VaR calculation, stress testing, real-time monitoring and automatic stop-loss mechanisms to keep portfolio risk under control."
+      },
+      {
+        "question": "Is private deployment available?",
+        "answer": "Both SaaS cloud and private deployment models are supported, with customized solutions tailored to client needs."
+      }
+    ]
+  }
+}
