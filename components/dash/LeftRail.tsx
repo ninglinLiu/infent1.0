@@ -31,11 +31,11 @@ export function LeftRail() {
   const t = useT()
 
   return (
-    <aside className="w-14 shrink-0 border-r border-[var(--line-1)] bg-[var(--bg-1)]/70 flex flex-col items-center py-3 gap-1">
+    <aside aria-label="Dashboard navigation" className="w-full md:w-14 shrink-0 border-b md:border-b-0 md:border-r border-[var(--line-1)] bg-[var(--bg-1)]/70 flex md:flex-col items-center overflow-x-auto md:overflow-visible px-2 md:px-0 py-1 md:py-3 gap-1">
       <Link
         href="/"
         title={t("rail.back")}
-        className="h-10 w-10 rounded-md flex items-center justify-center bg-gradient-to-br from-[#00ff9f] to-[#22d3ee] hover:brightness-110 transition mb-2"
+        className="hidden md:flex h-10 w-10 rounded-md items-center justify-center bg-gradient-to-br from-[#00ff9f] to-[#22d3ee] hover:brightness-110 transition mb-2"
       >
         <span className="font-display text-sm font-bold text-black">Ω</span>
       </Link>
@@ -47,8 +47,10 @@ export function LeftRail() {
           <button
             key={id}
             title={label}
+            aria-label={label}
+            aria-current={active ? 'page' : undefined}
             onClick={() => setView(id)}
-            className={`relative h-10 w-10 rounded-md flex items-center justify-center transition ${
+            className={`relative h-11 min-w-11 shrink-0 md:w-10 rounded-md flex items-center justify-center transition ${
               active
                 ? "bg-[var(--bg-3)] text-up ring-1 ring-[rgba(0,255,159,0.35)]"
                 : "text-[var(--fg-2)] hover:text-[var(--fg-0)] hover:bg-[var(--bg-3)]"
@@ -65,11 +67,11 @@ export function LeftRail() {
 
       <div className="flex-1" />
 
-      <div className="relative h-10 w-10 rounded-md flex items-center justify-center text-info ai-pulse">
+      <div className="relative h-10 w-10 rounded-md hidden md:flex items-center justify-center text-info ai-pulse">
         <Sparkles className="h-4 w-4" />
       </div>
       <div
-        className="mt-1 text-[9px] text-ghost"
+        className="hidden md:block mt-1 text-[9px] text-ghost"
         style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
       >
         v2025.11

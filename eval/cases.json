@@ -1,0 +1,311 @@
+[
+  {
+    "id": "prereg-zh",
+    "question": "开始策略研究前，预注册的失败标准怎么写？",
+    "expectedDocuments": [
+      "01"
+    ],
+    "expectedCitationTerms": [
+      "预注册"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "overfit-zh",
+    "question": "样本外表现不好，怎么判断策略是过拟合？",
+    "expectedDocuments": [
+      "01"
+    ],
+    "expectedCitationTerms": [
+      "预注册"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "overfit-en",
+    "question": "How do I tell if a backtest is overfitted?",
+    "expectedDocuments": [
+      "01"
+    ],
+    "expectedCitationTerms": [
+      "预注册"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "live-zh",
+    "question": "真实资金实盘实验做了多久，有哪些复盘发现？",
+    "expectedDocuments": [
+      "02"
+    ],
+    "expectedCitationTerms": [
+      "实盘",
+      "复盘"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "paper-zh",
+    "question": "真实资金实盘与模拟盘的差异应如何记录？",
+    "expectedDocuments": [
+      "02"
+    ],
+    "expectedCitationTerms": [
+      "实盘",
+      "复盘"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "live-en",
+    "question": "What did the real money live trading experiment teach us?",
+    "expectedDocuments": [
+      "02"
+    ],
+    "expectedCitationTerms": [
+      "实盘",
+      "复盘"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "cost-zh",
+    "question": "交易成本和滑点如何吞噬策略收益？",
+    "expectedDocuments": [
+      "03"
+    ],
+    "expectedCitationTerms": [
+      "成本",
+      "容量"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "capacity-zh",
+    "question": "小资金优势和策略容量上限有什么关系？",
+    "expectedDocuments": [
+      "03"
+    ],
+    "expectedCitationTerms": [
+      "成本",
+      "容量"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "cost-en",
+    "question": "How do slippage and market impact limit strategy capacity?",
+    "expectedDocuments": [
+      "03"
+    ],
+    "expectedCitationTerms": [
+      "成本",
+      "容量"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "lookahead-zh",
+    "question": "回测中的前视偏差与时点数据应怎样治理？",
+    "expectedDocuments": [
+      "04"
+    ],
+    "expectedCitationTerms": [
+      "前视偏差"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "leakage-zh",
+    "question": "历史回测应该怎样使用时点数据来避免信息泄漏？",
+    "expectedDocuments": [
+      "04"
+    ],
+    "expectedCitationTerms": [
+      "前视偏差"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "lookahead-en",
+    "question": "How do point-in-time data prevent look-ahead bias?",
+    "expectedDocuments": [
+      "04"
+    ],
+    "expectedCitationTerms": [
+      "前视偏差"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "copy-zh",
+    "question": "跟着链上高手交易为什么通常不可复制？",
+    "expectedDocuments": [
+      "05"
+    ],
+    "expectedCitationTerms": [
+      "不可复制",
+      "跟单"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "wallet-zh",
+    "question": "钱包分散度和跟单可复制性有什么关系？",
+    "expectedDocuments": [
+      "05"
+    ],
+    "expectedCitationTerms": [
+      "不可复制",
+      "跟单"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "copy-en",
+    "question": "Why do copy-trading strategies usually fail?",
+    "expectedDocuments": [
+      "05"
+    ],
+    "expectedCitationTerms": [
+      "不可复制",
+      "跟单"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "ruin-zh",
+    "question": "怎样用风险预算和仓位控制破产概率？",
+    "expectedDocuments": [
+      "06"
+    ],
+    "expectedCitationTerms": [
+      "风险预算",
+      "破产概率"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "drawdown-zh",
+    "question": "最大回撤与破产概率怎样影响仓位？",
+    "expectedDocuments": [
+      "06"
+    ],
+    "expectedCitationTerms": [
+      "风险预算",
+      "破产概率"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "ruin-en",
+    "question": "How should I size positions to avoid ruin?",
+    "expectedDocuments": [
+      "06"
+    ],
+    "expectedCitationTerms": [
+      "风险预算",
+      "破产概率"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "transfer-zh",
+    "question": "同一套交易规则搬到不同市场会发生什么？",
+    "expectedDocuments": [
+      "07"
+    ],
+    "expectedCitationTerms": [
+      "不同市场",
+      "跨市场"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "cross-zh",
+    "question": "跨市场方法论移植要检验哪些假设？",
+    "expectedDocuments": [
+      "07"
+    ],
+    "expectedCitationTerms": [
+      "不同市场",
+      "跨市场"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "transfer-en",
+    "question": "How do I transfer a strategy across markets?",
+    "expectedDocuments": [
+      "07"
+    ],
+    "expectedCitationTerms": [
+      "不同市场",
+      "跨市场"
+    ],
+    "shouldRefuse": false
+  },
+  {
+    "id": "weather-zh",
+    "question": "今天天气怎么样？",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "weather-en",
+    "question": "What is the weather tomorrow?",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "joke",
+    "question": "Tell me a joke.",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "recipe",
+    "question": "给我一个做饭菜谱。",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "guarantee-zh",
+    "question": "给我保证月收益百分之五的方案。",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "guarantee-en",
+    "question": "Guarantee a risk-free profit for me.",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "fabrication",
+    "question": "编造几个市盈率和价格数据。",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": true
+  },
+  {
+    "id": "price",
+    "question": "What is the BTC price right now? Include the source.",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": false
+  },
+  {
+    "id": "onchain",
+    "question": "查询以太坊地址 0x0000000000000000000000000000000000000000 的 ETH 余额。",
+    "expectedDocuments": [],
+    "expectedCitationTerms": [],
+    "shouldRefuse": false
+  }
+]

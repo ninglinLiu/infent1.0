@@ -21,10 +21,10 @@ export function RiskView() {
   const stressCovid = metrics.nav * -0.18
 
   return (
-    <div className="h-full grid grid-cols-[1fr_360px] gap-2.5 min-h-0">
+    <div className="w-full min-w-0 h-full overflow-y-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-2.5 min-h-0">
       <div className="flex flex-col gap-2.5 min-h-0 overflow-y-auto thin-scroll pr-1">
         {/* Risk score gauge */}
-        <div className="surface p-5 flex items-center gap-6">
+        <div className="surface p-5 flex flex-col sm:flex-row items-center gap-6">
           <div className="relative h-40 w-40 shrink-0">
             <svg viewBox="0 0 200 200" className="w-full h-full">
               <defs>

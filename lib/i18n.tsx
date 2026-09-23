@@ -110,12 +110,15 @@ const DICT = {
 
   // Agent chat
   "agent.name":       { zh: "Omni-AI Agent", en: "Omni-AI Agent" },
-  "agent.subtitle":   { zh: "金融智能助手 · 小白友好 · 可一键执行", en: "Financial copilot · beginner-friendly · one-click execute" },
-  "agent.online":     { zh: "在线",         en: "Online" },
+  "agent.subtitle":   { zh: "投资研究 · 实时工具 · 来源可查", en: "Investment research · tools · verifiable sources" },
+  "agent.online":     { zh: "研究助手",         en: "Research" },
+  "agent.sources": { zh: "检索参考资料", en: "Retrieved references" },
+  "agent.stop": { zh: "停止", en: "Stop" },
+  "agent.fallback": { zh: "策略卡采用规则匹配（结构化输出降级）", en: "Cards selected by rules (structured output fallback)" },
   "agent.quickHint":  { zh: "日常金融快问 · 点一下直接问 Agent", en: "Quick questions · tap to ask the agent" },
   "agent.placeholder":{ zh: "问我任何金融问题 · 比如「我手上有 20 万想买房首付怎么理」", en: "Ask any investment question · e.g. \"How should I invest $30K for a home down-payment?\"" },
   "agent.send":       { zh: "发送",         en: "Send" },
-  "agent.exec":       { zh: "执行策略",     en: "Execute strategy" },
+  "agent.exec":       { zh: "模拟执行",     en: "Simulate strategy" },
   "agent.executing":  { zh: "执行中…",       en: "Executing…" },
   "agent.showReason": { zh: "查看 AI 推理", en: "Show AI reasoning" },
   "agent.hideReason": { zh: "收起推理",     en: "Hide reasoning" },

@@ -8,6 +8,7 @@ import { BrandSection } from "@/components/showcase/BrandSection"
 import { TeamSection } from "@/components/showcase/TeamSection"
 import { CTASection } from "@/components/showcase/CTASection"
 import { Footer } from "@/components/showcase/Footer"
+import { LiveAgentSection } from "@/components/showcase/LiveAgentSection"
 
 export default function ShowcasePage() {
   return (
@@ -18,6 +19,7 @@ export default function ShowcasePage() {
       <SolutionSection />
       <LandscapeSection />
       <ValueCanvas />
+      <LiveAgentSection />
       <BrandSection />
       <TeamSection />
       <CTASection />

@@ -17,7 +17,7 @@ export function JournalView() {
   ]
 
   return (
-    <div className="h-full grid grid-cols-[1fr_360px] gap-2.5 min-h-0">
+    <div className="w-full min-w-0 h-full overflow-y-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-2.5 min-h-0">
       <div className="surface flex flex-col min-h-0">
         <div className="px-4 py-3 border-b border-[var(--line-1)] flex items-center gap-2">
           <History className="h-3.5 w-3.5 text-info" />

@@ -1,240 +1,125 @@
-# Omni-Intelligent Investment Advisor & Risk Management AI
+# Infent · 可核对的投资研究 Agent
 
-**全栈式智能投资顾问与风险管理 AI**
+Next.js + TypeScript 的双语投资研究原型。首页和仪表盘接同一套真实模型、RAG 与只读工具；保留既有实时 K 线和教学模拟界面。
 
-A stunning cyberpunk-styled landing page for an AI-powered investment advisor and risk management system, built with Next.js 14, TypeScript, Tailwind CSS, Framer Motion, and Three.js.
+本次改造的实际测试结果、部署步骤与已知限制见 [P1 验收记录](docs/P1_VERIFICATION.md)。
 
-一个采用赛博朋克风格的智能投资顾问与风险管理系统的展示页面，使用 Next.js 14、TypeScript、Tailwind CSS、Framer Motion 和 Three.js 构建。
+## 哪些数据是真的
 
----
+| 功能 | 数据与边界 |
+|---|---|
+| 对话 | 服务端调用 OpenAI 兼容协议的模型，流式返回；未配置密钥会明确说明 |
+| 知识库 | 作者的 7 篇研究笔记、43 个切块；默认词法检索，有中英文金融术语扩展 |
+| `get_price(symbol)` | BTC/ETH/SOL 用 Coinbase spot；股票/ETF 使用 Yahoo Finance 最新报价，可延迟 |
+| `get_onchain_stats(address)` | 以太坊主网，同一区块哈希下的原生 ETH 余额与 outgoing nonce；不是代币持仓、收益率或钱包画像 |
+| K 线 | 保留原项目的 Eastmoney/Yahoo 接口和搜索 |
+| 策略卡、持仓、执行、资讯、风险面板 | 教学模拟。卡片业绩数字不是实测、收益保证或真实订单 |
 
-## Features / 功能特性
+工具结果保留来源、查询时间和提供方时间。Coinbase 没有报价时间戳时 `quotedAt=null`，不能把 `observedAt` 当成交时间。失败时返回明确错误，不填假行情。
 
-- 🎨 **Cyberpunk Aesthetic / 赛博朋克美学**: Dark theme with neon accents (cyan, magenta, purple) / 深色主题配霓虹灯效果（青色、品红、紫色）
-- 🌍 **Bilingual Support / 双语支持**: English and Chinese language switching / 中英文语言切换
-- 📱 **Fully Responsive / 完全响应式**: Mobile-first design with desktop enhancements / 移动优先设计，支持桌面端增强
-- ✨ **Smooth Animations / 流畅动画**: Framer Motion powered transitions and effects / 基于 Framer Motion 的过渡和特效
-- 🎭 **Interactive 3D / 交互式 3D**: Three.js backgrounds and visualizations / Three.js 背景和可视化
-- 📊 **Data Visualization / 数据可视化**: KPI dashboards and risk radar charts / KPI 仪表板和风险雷达图
-- 🤖 **AI Investment Advisor Demo / AI 投资顾问演示**: Interactive chat interface with stock recommendations / 交互式聊天界面，提供股票推荐
-- 🚀 **Production Ready / 生产就绪**: Optimized for Vercel deployment / 针对 Vercel 部署优化
+## 本地启动
 
----
-
-## Tech Stack / 技术栈
-
-- **Framework / 框架**: Next.js 14 (App Router)
-- **Language / 语言**: TypeScript
-- **Styling / 样式**: Tailwind CSS + Custom CSS Variables
-- **Animations / 动画**: Framer Motion
-- **3D Graphics / 3D 图形**: Three.js
-- **Charts / 图表**: Recharts
-- **UI Components / UI 组件**: Radix UI (via shadcn/ui)
-- **Icons / 图标**: Lucide React
-
----
-
-## Getting Started / 快速开始
-
-### Installation / 安装
+需要 Node.js 22 和 npm。
 
 ```bash
-# Clone the repository / 克隆仓库
-git clone <your-repo-url>
-
-# Install dependencies / 安装依赖
-npm install
-# or / 或
-pnpm install
-
-# Run development server / 运行开发服务器
+npm ci
+# 复制 .env.example 为 .env.local，填入已有的模型配置
+npm run build:knowledge
 npm run dev
-# or / 或
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser. / 在浏览器中打开 [http://localhost:3000](http://localhost:3000)。
+首页 `/#live-agent` 可直接提问；`/dashboard` 的 Agent 标签提供同样的服务。无需模型密钥也能运行页面、离线评测和测试。
 
-### Build for Production / 构建生产版本
+```bash
+npm run typecheck
+npm run lint
+npm test
+npm run eval
+npm run build
+npm start
+```
+
+生产部署必须使用 Next.js 服务端，不能静态 export；聊天和行情 API 需要 Node runtime。字体随 npm 依赖本地打包，构建不下载 Google Fonts。
+
+## Agent 工作流
+
+1. 限制请求大小、角色、轮数和每条字符数；拒绝客户端 system 消息。
+2. 明确的拒答规则处理保证收益、编造数据和少量范围外请求；其他问题由系统提示词约束。
+3. 检索作者研究笔记并加入系统上下文。
+4. 解析模型 SSE 的工具调用，校验参数，执行只读查询，再把结果回填模型。最多 3 个工具轮次、6 次调用，然后必须回答。
+5. 保留流式正文和工具查询记录；取消或超时中断上游。
+6. 对有候选卡片的问题，让模型输出符合 JSON Schema 的卡片 ID/理由。服务端 Zod 校验、候选 ID 白名单校验；失败回退确定性匹配。无相关候选时不强推卡片。
+
+`LLM_STRUCTURED_OUTPUT=json_object` 是默认兼容模式：Schema 放入提示词，服务器严格验证。`json_schema` 模式向支持的 provider 传严格 Schema。不保证所有 OpenAI 兼容模型都支持相同的 tools/JSON 能力。
+
+聊天文本由 React 转义，只支持安全的加粗展示，不执行模型输出的 HTML。
+
+## MCP
+
+独立的 stdio MCP server 与网页共享同一个工具执行器，不另写一套行情逻辑。无需模型密钥。两个工具均声明为只读。
+
+可用 `npm run --silent mcp` 启动；Claude Desktop / Cursor 的配置示例：
+
+```json
+{
+  "mcpServers": {
+    "infent": {
+      "command": "node",
+      "args": [
+        "/ABSOLUTE/PATH/infent1.0/node_modules/tsx/dist/cli.mjs",
+        "--tsconfig",
+        "/ABSOLUTE/PATH/infent1.0/tsconfig.json",
+        "/ABSOLUTE/PATH/infent1.0/scripts/mcp-server.ts"
+      ],
+      "env": {
+        "ETH_RPC_URL": "https://ethereum-rpc.publicnode.com"
+      }
+    }
+  }
+}
+```
+
+Windows 路径可以写成 `C:/Users/.../infent1.0/...`。服务端 stdout 只用于 MCP 协议。自动测试用真实 MCP 客户端完成 initialize、listTools、callTool，并测试从仓库外启动 stdio。
+
+## 30 条评测与回归
+
+`eval/cases.json` 标注了预期文档、正文引用关键词和应否拒答，覆盖 7 篇笔记的中英文问题、负例及数据查询。
+
+- `npm run eval`：不调用模型。报告检索参考资料命中率、负例无引用率、拒答**规则路由**准确率；失败退出 1。
+- `npm run eval:live`：使用配置的真实模型运行同一套问题，额外测正文引用关键词是否出现、请求是否成功。会消耗模型额度。
+- `npm run test:live`：少量真实工具查询、模型查价、JSON 选卡冒烟测试。
+- 报告保存到 `eval/results/`，不默认提交问答日志。
+- GitHub Actions 在 push/PR 自动跑类型、lint、单元/协议测试、离线评测和构建。工作流也提供手动的真实模型评测开关，使用 `LLM_API_KEY` repository secret。
+
+这些是小规模开发回归集，**不是独立测试集上的模型质量、事实正确率或投资收益评测**。正文引用出现也不等于引用内容支持结论；上线前需人工检查回答。改提示词会触发 CI，语义效果需再运行真实模型评测。
+
+## 手机与 PWA
+
+首页和仪表盘按屏宽重排，手机顶部可横向切换功能，Agent 页面保留完整聊天输入区。生产构建提供 manifest、512px PNG 图标、Apple 图标和 Service Worker。
+
+Chrome/Edge 支持安装提示；iOS Safari 可用“分享 → 添加到主屏幕”。需要 HTTPS 或 localhost。Service Worker **只缓存离线提示页**，不缓存对话、地址查询、行情或持仓；离线时不会显示旧报价。
+
+浏览器回归（默认使用本机 Edge）：
 
 ```bash
 npm run build
-npm run start
+npm run test:browser
 ```
 
----
+覆盖桌面、768px 平板、390px 手机、输入框可见性、模型 HTML 安全渲染、工具证据、manifest/icon 和离线页。离线页是独立 HTML，不依赖断网后无法下载的 React chunks。
 
-## Project Structure / 项目结构
+## Vercel
 
-```
-/
-├── app/
-│   ├── layout.tsx          # Root layout with language provider / 根布局（包含语言提供者）
-│   ├── page.tsx             # Main landing page / 主页面
-│   ├── globals.css          # Global styles and cyberpunk theme / 全局样式和赛博朋克主题
-│   └── api/
-│       └── feedback/        # Contact form API endpoint / 联系表单 API 端点
-├── components/
-│   ├── ui/                  # Reusable UI components / 可复用的 UI 组件
-│   ├── NeonHeader.tsx       # Navigation header / 导航头部
-│   ├── HeroGlitchTitle.tsx  # Glitched title effect / 故障标题效果
-│   ├── HoloCard.tsx         # Holographic card component / 全息卡片组件
-│   ├── ArchitectureScene.tsx # 3D architecture visualization / 3D 架构可视化
-│   ├── MetricsPanel.tsx     # KPI dashboard / KPI 仪表板
-│   ├── RiskRadar.tsx        # Risk visualization / 风险可视化
-│   ├── TimelineRoadmap.tsx  # Product roadmap / 产品路线图
-│   ├── FAQ.tsx              # Accordion FAQ / 手风琴式常见问题
-│   ├── ContactForm.tsx      # Contact form / 联系表单
-│   ├── UseCases.tsx         # Use case cards / 用例卡片
-│   ├── KeyModules.tsx       # Feature modules / 功能模块
-│   ├── ProblemSolution.tsx  # Problem/solution section / 问题/解决方案部分
-│   ├── AIConsultant.tsx     # AI Investment Advisor demo / AI 投资顾问演示
-│   └── FooterCRT.tsx        # Footer with CRT scanline effect / 带 CRT 扫描线效果的页脚
-├── content/
-│   ├── project.json         # Main content (bilingual) / 主要内容（双语）
-│   └── kpis.json            # KPI data and chart data / KPI 数据和图表数据
-├── lib/
-│   ├── language-context.tsx # Language switching context / 语言切换上下文
-│   └── utils.ts             # Utility functions / 工具函数
-└── public/                  # Static assets / 静态资源
-```
+使用现有项目、默认 Next.js build 配置。填入 `.env.example` 的服务端环境变量，然后部署。
 
----
+Web Analytics 已接入组件。需在 Vercel 项目启用 Analytics，再设 `NEXT_PUBLIC_ENABLE_ANALYTICS=true` 并重建。没有编造或预填用户数；不会发送聊天正文或地址作为自定义事件。
 
-## Content Management / 内容管理
+## 已知边界
 
-All text content is managed through JSON files in `/content`: / 所有文本内容通过 `/content` 目录中的 JSON 文件管理：
+- IP 限流是单进程内存版；多实例部署不等于全局额度管理。
+- 免费行情/RPC 可能限流、超时或延迟；真实查询失败会展示错误。生产可配置自己的主网 RPC。
+- 英文检索使用有限术语扩展，不等于任意语言向量检索。可用 `npm run build:knowledge -- --embed` 选配 embedding。
+- 收益归因基准、Coding Agent、JD Workflow 属于 P2–P4，不在本仓库这次 P1 改造范围。
+- 本产品用于研究与教育，不连接券商，不提交真实交易。
 
-### `/content/project.json`
-
-This file contains: / 此文件包含：
-
-- Project title (bilingual) / 项目标题（双语）
-- Problem statement / 问题陈述
-- Solution description / 解决方案描述
-- Key modules / 核心模块
-- Use cases / 用例
-- Roadmap / 路线图
-- FAQ / 常见问题
-
-### `/content/kpis.json`
-
-Contains: / 包含：
-
-- Metric values (VaR, Sharpe, Drawdown, etc.) / 指标值（VaR、夏普比率、回撤等）
-- Chart data / 图表数据
-- Risk radar data / 风险雷达数据
-
-To modify content, edit these JSON files directly. The site will update automatically on rebuild. / 要修改内容，请直接编辑这些 JSON 文件。网站将在重新构建时自动更新。
-
----
-
-## AI Investment Advisor Demo / AI 投资顾问演示
-
-The AI Investment Advisor component (`components/AIConsultant.tsx`) provides an interactive chat interface for demonstrating investment advisory capabilities. / AI 投资顾问组件（`components/AIConsultant.tsx`）提供了一个交互式聊天界面，用于演示投资顾问功能。
-
-### Features / 功能
-
-- **Interactive Chat Interface / 交互式聊天界面**: Real-time conversation with the AI advisor / 与 AI 顾问实时对话
-- **Stock Recommendations / 股票推荐**: Ask "What are some fundamentally strong stocks to recommend?" to get demo stock suggestions / 询问"最近有什么基本面好的股票推荐？"以获取演示股票建议
-- **Quick Questions / 快速问题**: Pre-defined question buttons for easy interaction / 预定义问题按钮，便于交互
-- **Demo Responses / 演示回复**: Fixed responses for demonstration purposes / 用于演示的固定回复
-
-### Usage / 使用方法
-
-Users can interact with the AI advisor by: / 用户可以通过以下方式与 AI 顾问交互：
-
-1. Typing questions directly / 直接输入问题
-2. Clicking quick question buttons / 点击快速问题按钮
-3. Asking about stocks, risk analysis, or investment strategies / 询问股票、风险分析或投资策略
-
-**Note**: This is a demo component with predefined responses. For production use, integrate with a real AI/ML backend. / **注意**：这是一个带有预定义回复的演示组件。在生产环境中使用，需要与真实的 AI/ML 后端集成。
-
----
-
-## Deployment / 部署
-
-### Vercel (Recommended) / Vercel（推荐）
-
-1. Push your code to GitHub / 将代码推送到 GitHub
-2. Import your repository on [Vercel](https://vercel.com) / 在 [Vercel](https://vercel.com) 上导入您的仓库
-3. Vercel will automatically detect Next.js and deploy / Vercel 会自动检测 Next.js 并部署
-
-### Manual Build / 手动构建
-
-```bash
-npm run build
-```
-
-The output will be in `.next/` directory. / 输出将在 `.next/` 目录中。
-
----
-
-## Customization / 自定义
-
-### Colors / 颜色
-
-Edit `app/globals.css` to customize neon colors: / 编辑 `app/globals.css` 以自定义霓虹灯颜色：
-
-```css
---neon-cyan: #00ffff;
---neon-magenta: #ff00ff;
---neon-purple: #a855f7;
-```
-
-### Animations / 动画
-
-Adjust animation durations and effects in component files using Framer Motion props. / 使用 Framer Motion 属性在组件文件中调整动画持续时间和效果。
-
-### 3D Scene / 3D 场景
-
-Modify `components/ArchitectureScene.tsx` to customize the Three.js scene. / 修改 `components/ArchitectureScene.tsx` 以自定义 Three.js 场景。
-
-### AI Advisor Responses / AI 顾问回复
-
-Edit the `getAIResponse` function in `components/AIConsultant.tsx` to customize demo responses. / 编辑 `components/AIConsultant.tsx` 中的 `getAIResponse` 函数以自定义演示回复。
-
----
-
-## Performance / 性能
-
-- Three.js scenes use `IntersectionObserver` for lazy loading / Three.js 场景使用 `IntersectionObserver` 进行懒加载
-- Images are optimized with Next.js Image component / 使用 Next.js Image 组件优化图片
-- Framer Motion animations respect `prefers-reduced-motion` / Framer Motion 动画尊重 `prefers-reduced-motion` 设置
-- Mobile devices get simplified 3D renderings / 移动设备获得简化的 3D 渲染
-
----
-
-## Language Support / 语言支持
-
-The application supports both English and Chinese. The default language is set to English. Users can toggle between languages using the language switch button in the header. / 应用程序支持英文和中文。默认语言设置为英文。用户可以使用标题栏中的语言切换按钮在语言之间切换。
-
-To change the default language, modify `lib/language-context.tsx`: / 要更改默认语言，请修改 `lib/language-context.tsx`：
-
-```typescript
-const [language, setLanguage] = useState<Language>('en') // or 'zh' / 或 'zh'
-```
-
----
-
-## License / 许可证
-
-MIT License - feel free to use this project for your own purposes. / MIT 许可证 - 可自由用于您自己的目的。
-
----
-
-## Credits / 致谢
-
-Built with ❤️ using Next.js, Tailwind CSS, Framer Motion, and Three.js. / 使用 Next.js、Tailwind CSS、Framer Motion 和 Three.js 构建。
-
----
-
-## Contributing / 贡献
-
-Contributions are welcome! Please feel free to submit a Pull Request. / 欢迎贡献！请随时提交 Pull Request。
-
----
-
-## Support / 支持
-
-For issues and questions, please open an issue on GitHub. / 如有问题和疑问，请在 GitHub 上提交 issue。
+接口参考：[DeepSeek tool calls](https://api-docs.deepseek.com/guides/tool_calls/)、[JSON output](https://api-docs.deepseek.com/guides/json_mode/)、[MCP server guide](https://modelcontextprotocol.io/docs/develop/build-server)。

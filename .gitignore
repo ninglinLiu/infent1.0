@@ -33,3 +33,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local model credentials and generated verification artifacts
+*.log
+scripts/.embedding-cache.json
+eval/results/
+test-results/
+playwright-report/

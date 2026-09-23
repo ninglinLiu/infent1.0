@@ -397,7 +397,7 @@ export function KLineChart() {
       : null
   const quote = live?.quote
   const precision = live?.precision ?? 2
-  const shown = hover ?? (quote
+  const shown = useMemo(() => hover ?? (quote
     ? {
         time: (payload?.candles.at(-1)?.time ?? "") as Time,
         open: quote.price,
@@ -406,7 +406,7 @@ export function KLineChart() {
         close: quote.price,
         volume: quote.volume,
       }
-    : null)
+    : null), [hover, quote, payload])
   const chg = quote?.change ?? 0
   const chgPct = quote?.changePct ?? 0
   const up = chg >= 0

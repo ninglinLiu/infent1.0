@@ -13,7 +13,6 @@ import { BacktestView } from "./views/BacktestView"
 import { RiskView } from "./views/RiskView"
 import { JournalView } from "./views/JournalView"
 import { SettingsView } from "./views/SettingsView"
-import { motion, AnimatePresence } from "framer-motion"
 import { useT, type DictKey } from "@/lib/i18n"
 
 const VIEW_META: Record<ViewId, { title: DictKey; sub: DictKey; tag: string }> = {
@@ -45,14 +44,10 @@ function ViewTitleBar() {
 function ViewRenderer() {
   const { view } = useView()
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
+      <div
         key={view}
-        initial={{ opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -4 }}
-        transition={{ duration: 0.25 }}
-        className="flex-1 min-h-0 flex"
+        data-view={view}
+        className="flex-1 min-w-0 min-h-0 flex"
       >
         {view === "workspace" && <WorkspaceView />}
         {view === "agent"     && <AgentView />}
@@ -62,8 +57,7 @@ function ViewRenderer() {
         {view === "risk"      && <RiskView />}
         {view === "journal"   && <JournalView />}
         {view === "settings"  && <SettingsView />}
-      </motion.div>
-    </AnimatePresence>
+      </div>
   )
 }
 
@@ -71,13 +65,13 @@ export function AppShell() {
   return (
     <DashProvider>
       <ViewProvider>
-        <div className="h-screen w-screen bg-[var(--bg-0)] text-[var(--fg-0)] flex flex-col overflow-hidden hud-grid">
+        <div className="h-[100dvh] w-full bg-[var(--bg-0)] text-[var(--fg-0)] flex flex-col overflow-hidden hud-grid">
           <TopBar />
-          <div className="flex-1 flex min-h-0">
+          <div className="flex-1 flex flex-col md:flex-row min-h-0">
             <LeftRail />
             <div className="flex-1 min-w-0 flex flex-col min-h-0">
               <ViewTitleBar />
-              <div className="flex-1 min-h-0 p-2.5 flex">
+              <div className="flex-1 min-w-0 min-h-0 p-2.5 flex overflow-auto">
                 <ViewRenderer />
               </div>
             </div>

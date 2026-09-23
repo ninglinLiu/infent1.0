@@ -35,13 +35,13 @@ export function DiscoverView() {
   const topStrats = Object.values(STRATEGIES).slice(0, 3)
 
   return (
-    <div className="h-full grid grid-cols-[1fr_400px] gap-2.5 min-h-0">
+    <div className="w-full min-w-0 h-full overflow-y-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_400px] gap-2.5 min-h-0">
       <div className="flex flex-col gap-2.5 min-h-0 overflow-y-auto thin-scroll pr-1">
         {/* Insight cards */}
         <div className="grid gap-2.5">
           <div className="flex items-center gap-2">
             <Sparkles className="h-3.5 w-3.5 text-up" />
-            <span className="text-[11px] uppercase tracking-wider text-dim">Today&apos;s Alpha · personalised for you</span>
+            <span className="text-[11px] uppercase tracking-wider text-dim">Illustrative insights · simulated data</span>
           </div>
           {INSIGHTS.map((ins, i) => (
             <div

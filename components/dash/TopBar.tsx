@@ -9,7 +9,7 @@ import { Activity, Circle, Command, Languages, Moon, RotateCcw, Sun } from "luci
 function TickerRow() {
   const items = [...TOP_TICKERS, ...TOP_TICKERS]
   return (
-    <div className="relative flex-1 overflow-hidden">
+    <div className="relative hidden xl:block flex-1 overflow-hidden" aria-label="Simulated ticker data">
       <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-[var(--bg-1)] to-transparent z-10" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[var(--bg-1)] to-transparent z-10" />
       <div className="marquee-track flex items-center gap-6 whitespace-nowrap py-1">
@@ -32,33 +32,33 @@ export function TopBar() {
   const { theme, setTheme, resetAll } = useDash()
   const { lang, setLang, t } = useLang()
   return (
-    <header className="h-12 shrink-0 border-b border-[var(--line-1)] bg-[var(--bg-1)]/80 backdrop-blur-md flex items-center gap-4 px-4">
-      <div className="flex items-center gap-2 w-[360px] shrink-0">
-        <div className="relative h-7 w-7 rounded-md bg-gradient-to-br from-[#00ff9f] to-[#22d3ee] flex items-center justify-center">
+    <header className="min-h-12 shrink-0 border-b border-[var(--line-1)] bg-[var(--bg-1)]/80 backdrop-blur-md flex items-center justify-between gap-2 px-2 sm:px-4">
+      <div className="flex min-w-0 items-center gap-2 xl:w-[360px]">
+        <div className="relative shrink-0 h-7 w-7 rounded-md bg-gradient-to-br from-[#00ff9f] to-[#22d3ee] flex items-center justify-center">
           <span className="font-display text-[13px] font-bold text-black">Ω</span>
         </div>
-        <div className="flex flex-col leading-tight">
+        <div className="flex flex-col leading-tight whitespace-nowrap">
           <span className="font-display text-sm font-semibold tracking-wide">{BRAND.short}</span>
           <span
-            className="text-[10px] text-ghost tracking-[0.12em] truncate"
+            className="hidden lg:block text-[10px] text-ghost tracking-[0.12em] truncate"
             title={BRAND.full}
             style={{ maxWidth: 280 }}
           >
             {BRAND.full}
           </span>
         </div>
-        <div className="ml-2 chip info">
+        <div className="ml-2 chip info hidden lg:flex whitespace-nowrap shrink-0">
           <Circle className="h-1.5 w-1.5 fill-current" />
-          {t("dash.live")}
+          {lang === 'zh' ? '模拟账户' : 'Demo account'}
         </div>
       </div>
 
       <TickerRow />
 
       <div className="flex items-center gap-2 shrink-0">
-        <div className="chip">
+        <div className="chip hidden xl:flex">
           <Activity className="h-3 w-3 text-up" />
-          NYSE · OPEN
+          {lang === 'zh' ? '行情条为示例' : 'Demo ticker'}
         </div>
         <button
           type="button"
@@ -71,7 +71,7 @@ export function TopBar() {
         </button>
         <button
           onClick={resetAll}
-          className="chip hover:bg-[var(--bg-4)] transition"
+          className="chip hidden sm:flex hover:bg-[var(--bg-4)] transition"
           title={t("topbar.reset")}
         >
           <RotateCcw className="h-3 w-3" /> {t("topbar.resetBtn")}
@@ -90,10 +90,10 @@ export function TopBar() {
           {theme === "dark" ? <Moon className="h-3 w-3" /> : <Sun className="h-3 w-3" />}
           {theme === "dark" ? "Dark" : "Light"}
         </button>
-        <div className="chip">
+        <div className="chip hidden lg:flex">
           <Command className="h-3 w-3" /> K
         </div>
-        <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#2a2f3a] to-[#131620] border border-[var(--line-2)] flex items-center justify-center text-[11px] font-semibold">
+        <div className="hidden sm:flex h-7 w-7 rounded-full bg-gradient-to-br from-[#2a2f3a] to-[#131620] border border-[var(--line-2)] items-center justify-center text-[11px] font-semibold">
           YU
         </div>
       </div>

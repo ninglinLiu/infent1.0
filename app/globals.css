@@ -2,11 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Component defaults must precede utilities so hidden/sm:flex work on chips. */
+@layer components {
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; line-height: 16px;
+    border: 1px solid var(--line-2);
+    color: var(--fg-1);
+    background: var(--bg-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .chip.up   { color: var(--up);   border-color: rgba(0,255,159,0.4);  background: var(--up-soft); }
+  .chip.down { color: var(--down); border-color: rgba(255,59,92,0.4);  background: var(--down-soft); }
+  .chip.info { color: var(--info); border-color: rgba(88,199,255,0.4); background: var(--info-soft); }
+}
+
 /* =========================================================
    Infent Console — dark-first financial HUD tokens
    ========================================================= */
 @layer base {
   :root {
+    --font-sans: 'DM Sans Variable', Arial, sans-serif;
+    --font-display: 'Syne Variable', Arial, sans-serif;
     --bg-0: #070809;           /* root */
     --bg-1: #0a0b0d;           /* shell */
     --bg-2: #0f1114;           /* panel */
@@ -138,19 +156,6 @@
   .text-info { color: var(--info); }
   .text-dim  { color: var(--fg-2); }
   .text-ghost{ color: var(--fg-3); }
-
-  .chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 2px 8px; border-radius: 999px;
-    font-size: 11px; line-height: 16px;
-    border: 1px solid var(--line-2);
-    color: var(--fg-1);
-    background: var(--bg-3);
-    font-variant-numeric: tabular-nums;
-  }
-  .chip.up   { color: var(--up);   border-color: rgba(0,255,159,0.4);  background: var(--up-soft); }
-  .chip.down { color: var(--down); border-color: rgba(255,59,92,0.4);  background: var(--down-soft); }
-  .chip.info { color: var(--info); border-color: rgba(88,199,255,0.4); background: var(--info-soft); }
 
   /* HUD grid backdrop (very subtle) */
   .hud-grid {

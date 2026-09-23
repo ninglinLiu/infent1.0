@@ -1,22 +1,18 @@
 import type { Metadata, Viewport } from "next"
-import { DM_Sans, Syne } from "next/font/google"
+import '@fontsource-variable/dm-sans'
+import '@fontsource-variable/syne'
 import "./globals.css"
 import { BRAND } from "@/lib/brand"
 import { Providers } from "./providers"
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const syne = Syne({
-  subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["400", "600", "700", "800"],
-})
+import { PwaInstall } from "@/components/PwaInstall"
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: `${BRAND.full}`,
+  applicationName: 'Infent',
+  manifest: '/manifest.webmanifest',
+  icons: { icon: '/icons/icon-192.png', apple: '/icons/icon-180.png' },
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'Infent' },
   description:
     "Omni-Intelligent Investment Advisor & Risk Management AI — lightweight financial copilot for ordinary investors. Natural-language strategy generation, live risk monitoring, and one-click portfolio execution.",
 }
@@ -30,8 +26,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN" className="dark">
-      <body className={`${dmSans.variable} ${syne.variable} ${dmSans.className} bg-[var(--bg-0)] text-[var(--fg-0)]`}>
-        <Providers>{children}</Providers>
+      <body className="bg-[var(--bg-0)] text-[var(--fg-0)]">
+        <Providers>{children}<PwaInstall /></Providers>
+        {process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === 'true' && <Analytics />}
       </body>
     </html>
   )

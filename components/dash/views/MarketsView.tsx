@@ -10,7 +10,7 @@ import { useDash } from "@/lib/dash-store"
 export function MarketsView() {
   const { selectSymbol } = useDash()
   return (
-    <div className="h-full grid grid-cols-[1fr_360px] gap-2.5">
+    <div className="w-full min-w-0 h-full overflow-y-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-2.5">
       <div className="flex flex-col gap-2.5 min-h-0">
         <div className="surface px-4 py-3">
           <div className="flex items-center justify-between">
@@ -18,7 +18,7 @@ export function MarketsView() {
               <Globe2 className="h-3.5 w-3.5 text-info" />
               <span className="text-[11px] uppercase tracking-wider text-dim">Global Markets Overview</span>
             </div>
-            <span className="chip info">16 assets · Live</span>
+            <span className="chip info">16 assets · Demo</span>
           </div>
           <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
             {TOP_TICKERS.map((row, i) => {

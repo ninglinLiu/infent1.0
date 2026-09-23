@@ -2,14 +2,28 @@
 
 import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { Bot, ChevronRight, Send, Sparkles, Star, User2, Zap } from "lucide-react"
-import { QUICK_QUESTIONS, STRATEGIES, genericReply, type QuickQuestion, type Strategy } from "@/lib/mock/agent"
+import { Bot, ChevronRight, Send, Sparkles, Square, Star, User2, Zap } from "lucide-react"
+import { AnswerText } from "@/components/agent/AnswerText"
+import { ToolEvidence } from "@/components/agent/ToolEvidence"
+import type { ToolTrace } from "@/lib/ai/tools"
+import { QUICK_QUESTIONS, STRATEGIES, type QuickQuestion, type Strategy } from "@/lib/mock/agent"
 import { useDash } from "@/lib/dash-store"
 import { useLang, type DictKey } from "@/lib/i18n"
+import { useChatStream, toParagraphs, type WireMessage } from "@/lib/ai/use-chat-stream"
 
 type ChatMessage =
   | { id: string; role: "user"; text: string }
-  | { id: string; role: "assistant"; paragraphs: string[]; strategyIds: string[]; typing?: boolean }
+  | {
+      id: string
+      role: "assistant"
+      paragraphs: string[]
+      strategyIds: string[]
+      typing?: boolean
+      sources?: string[]
+      tools?: ToolTrace[]
+      strategyMode?: string
+      strategyCards?: Array<{ strategyId: string; rationale: string }>
+    }
 
 function RiskStars({ risk }: { risk: number }) {
   return (
@@ -34,7 +48,7 @@ function actionChip(a: { kind: string; symbol: string; qtyPct?: number; target?:
   return ""
 }
 
-function StrategyCard({ strategy }: { strategy: Strategy }) {
+function StrategyCard({ strategy, rationale }: { strategy: Strategy; rationale?: string }) {
   const { executeStrategy, activeStrategyId } = useDash()
   const { lang, t } = useLang()
   const busy = activeStrategyId === strategy.id
@@ -52,6 +66,8 @@ function StrategyCard({ strategy }: { strategy: Strategy }) {
       className="surface-raised relative overflow-hidden"
     >
       <div className="p-3 space-y-2">
+        <div className="text-[10px] text-ghost">{lang === 'zh' ? '教学模拟卡 · 下列业绩数字为示例，非实测或承诺' : 'Educational simulation · performance figures are illustrative, not measured or promised'}</div>
+        {rationale && <AnswerText text={rationale} />}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -169,6 +185,13 @@ function AssistantBubble({ m }: { m: Extract<ChatMessage, { role: "assistant" }>
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [m.id])
 
+  // 流式模式下 paragraphs 会随 token 持续增长。
+  // 非打字模式必须跟随长度变化，否则只会停留在首次渲染时的段数。
+  useEffect(() => {
+    if (m.typing) return
+    setRevealed(m.paragraphs.length)
+  }, [m.typing, m.paragraphs.length])
+
   return (
     <div className="flex gap-2">
       <div className="shrink-0 mt-0.5">
@@ -180,7 +203,7 @@ function AssistantBubble({ m }: { m: Extract<ChatMessage, { role: "assistant" }>
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-semibold">{t("agent.name")}</span>
           <span className="chip info text-[9px] px-1.5 py-0">
-            <Sparkles className="h-2 w-2" /> GPT-F · finance · v2.4
+            <Sparkles className="h-2 w-2" /> Research Agent
           </span>
         </div>
         <div className="space-y-1.5">
@@ -190,12 +213,9 @@ function AssistantBubble({ m }: { m: Extract<ChatMessage, { role: "assistant" }>
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-[13px] leading-relaxed text-[var(--fg-1)]"
-              dangerouslySetInnerHTML={{
-                __html: p.replace(/\*\*(.+?)\*\*/g, '<span class="text-[var(--fg-0)] font-semibold">$1</span>'),
-              }}
-            />
+            ><AnswerText text={p} /></motion.div>
           ))}
-          {revealed < m.paragraphs.length && (
+          {(revealed < m.paragraphs.length || m.paragraphs.every((p) => !p)) && (
             <div className="flex gap-1 pt-1">
               <span className="h-1.5 w-1.5 rounded-full bg-info animate-bounce" style={{ animationDelay: "0ms" }} />
               <span className="h-1.5 w-1.5 rounded-full bg-info animate-bounce" style={{ animationDelay: "150ms" }} />
@@ -204,12 +224,20 @@ function AssistantBubble({ m }: { m: Extract<ChatMessage, { role: "assistant" }>
           )}
         </div>
 
+        <ToolEvidence tools={m.tools} />
+        {m.strategyMode === 'fallback' && <div className="text-[10px] text-ghost">{t('agent.fallback')}</div>}
+        {m.sources && m.sources.length > 0 && (
+          <div className="text-[10px] text-ghost border-t border-[var(--line-1)] pt-1.5 mt-1">
+            {t("agent.sources")}：{m.sources.join(" · ")}
+          </div>
+        )}
+
         {revealed >= m.paragraphs.length && m.strategyIds.length > 0 && (
           <div className="space-y-2 pt-1">
             {m.strategyIds.map((sid) => {
               const s = STRATEGIES[sid]
               if (!s) return null
-              return <StrategyCard key={sid} strategy={s} />
+              return <StrategyCard key={sid} strategy={s} rationale={m.strategyCards?.find(card => card.strategyId === sid)?.rationale} />
             })}
           </div>
         )}
@@ -239,6 +267,7 @@ export function AgentChat() {
   const [input, setInput] = useState("")
   const [busy, setBusy] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const { send, stop } = useChatStream()
 
   useEffect(() => {
     setMessages([
@@ -255,64 +284,80 @@ export function AgentChat() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
   }, [messages])
 
-  function ask(q: QuickQuestion) {
-    const reply = lang === "en" ? q.replyEn : q.reply
-    const prompt = lang === "en" ? q.promptEn : q.prompt
+  /**
+   * 统一的提问入口：接 /api/chat 流式返回。
+   * 策略卡不再写死在快捷问题里，而是由服务端确定性匹配后随元数据返回，
+   * 这样自由输入的问题也能拿到策略卡。
+   */
+  async function askModel(prompt: string) {
+    const text = prompt.trim()
+    if (!text || busy) return
+
     const userId = `u-${Date.now()}`
     const aiId = `a-${Date.now() + 1}`
+
+    // 组装历史：intro 那条是本地问候语，不发给模型
+    const history: WireMessage[] = [
+      ...messages
+        .filter((m) => !m.id.startsWith("intro-"))
+        .map((m): WireMessage =>
+          m.role === "user"
+            ? { role: "user", content: m.text }
+            : { role: "assistant", content: m.paragraphs.join("\n\n") }
+        ),
+      { role: "user", content: text },
+    ]
+
     setMessages((prev) => [
       ...prev,
-      { id: userId, role: "user", text: prompt },
-      {
-        id: aiId,
-        role: "assistant",
-        paragraphs: reply,
-        strategyIds: q.strategyIds,
-        typing: true,
-      },
+      { id: userId, role: "user", text },
+      { id: aiId, role: "assistant", paragraphs: [""], strategyIds: [] },
     ])
     setBusy(true)
-    const totalMs = reply.length * 700 + 400
-    setTimeout(() => setBusy(false), totalMs)
+
+    await send(history, {
+      lang: lang === "en" ? "en" : "zh",
+      surface: lang === "en" ? "the Agent console of the dashboard" : "仪表盘的 Agent 控制台",
+      onText: (partial) => {
+        const paras = toParagraphs(partial)
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === aiId && m.role === "assistant" ? { ...m, paragraphs: paras } : m
+          )
+        )
+      },
+      onDone: (final, meta) => {
+        const paras = toParagraphs(final)
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === aiId && m.role === "assistant"
+              ? {
+                  ...m,
+                  paragraphs: paras,
+                  strategyIds: meta?.strategyIds ?? [],
+                  sources: meta?.sources ?? [],
+                  tools: meta?.tools ?? [],
+                  strategyMode: meta?.strategyMode,
+                  strategyCards: meta?.strategyCards,
+                }
+              : m
+          )
+        )
+        setBusy(false)
+      },
+      onError: () => setBusy(false),
+    })
   }
 
-  function askFreeform(prompt: string, reply: string[], strategyIds: string[]) {
-    const userId = `u-${Date.now()}`
-    const aiId = `a-${Date.now() + 1}`
-    setMessages((prev) => [
-      ...prev,
-      { id: userId, role: "user", text: prompt },
-      {
-        id: aiId,
-        role: "assistant",
-        paragraphs: reply,
-        strategyIds,
-        typing: true,
-      },
-    ])
-    setBusy(true)
-    const totalMs = reply.length * 700 + 400
-    setTimeout(() => setBusy(false), totalMs)
+  function ask(q: QuickQuestion) {
+    void askModel(lang === "en" ? q.promptEn : q.prompt)
   }
 
   function onSend() {
     const text = input.trim()
     if (!text) return
     setInput("")
-    const hit = QUICK_QUESTIONS.find(
-      (q) =>
-        q.prompt === text ||
-        q.promptEn === text ||
-        q.label === text ||
-        q.labelEn === text
-    )
-    if (hit) {
-      ask(hit)
-      return
-    }
-    const r = genericReply(text)
-    const reply = lang === "en" ? r.replyEn : r.replyZh
-    askFreeform(text, reply, r.strategyIds)
+    void askModel(text)
   }
 
   return (
@@ -374,21 +419,23 @@ export function AgentChat() {
           disabled={busy}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+            if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
               e.preventDefault()
               onSend()
             }
           }}
           placeholder={t("agent.placeholder")}
-          className="flex-1 bg-[var(--bg-1)] border border-[var(--line-2)] rounded-md px-3 py-2 text-[13px] placeholder:text-[var(--fg-3)] focus:outline-none focus:border-[rgba(0,255,159,0.45)] focus:ring-up"
+          aria-label={t('agent.placeholder')}
+          maxLength={4000}
+          className="min-w-0 flex-1 bg-[var(--bg-1)] border border-[var(--line-2)] rounded-md px-3 py-2 text-base sm:text-[13px] placeholder:text-[var(--fg-3)] focus:outline-none focus:border-[rgba(0,255,159,0.45)] focus:ring-up"
         />
         <button
-          onClick={onSend}
-          disabled={busy || !input.trim()}
+          onClick={busy ? stop : onSend}
+          disabled={!busy && !input.trim()}
           className="h-9 px-3 rounded-md bg-up text-black font-semibold text-[12px] flex items-center gap-1 hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed transition"
         >
-          <Send className="h-3.5 w-3.5" />
-          {t("agent.send")}
+          {busy ? <Square className="h-3.5 w-3.5" /> : <Send className="h-3.5 w-3.5" />}
+          {busy ? t('agent.stop') : t("agent.send")}
         </button>
       </div>
     </div>
